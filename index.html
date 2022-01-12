@@ -12,6 +12,15 @@
             outline: none;
             user-select: none;
         }
+
+        .visible {
+            visibility: visible;
+        }
+
+        .hidden {
+            visibility: hidden;
+        }
+
         .wrapper {
             position: relative;
             height: 200px;
@@ -23,6 +32,7 @@
             margin: 20px auto;
 
         }
+
         .light {
             position: absolute;
             height: 10px;
@@ -32,42 +42,55 @@
             left: 115px;
             transform-origin: 5px 115px;
         }
+
         .light-twinkling {
             animation: 1s twinkling 3, 100ms 3s twinkling 3;
         }
+
         .light:nth-child(2n) {
             background-color: #fafce7;
         }
+
         .light:nth-child(2n+1) {
             background-color: #ffe58b;
         }
+
         .light:nth-child(2) {
             transform: rotate(36deg);
         }
+
         .light:nth-child(3) {
             transform: rotate(72deg);
         }
+
         .light:nth-child(4) {
             transform: rotate(108deg);
         }
+
         .light:nth-child(5) {
             transform: rotate(144deg);
         }
+
         .light:nth-child(6) {
             transform: rotate(180deg);
         }
+
         .light:nth-child(7) {
             transform: rotate(216deg);
         }
+
         .light:nth-child(8) {
             transform: rotate(252deg);
         }
+
         .light:nth-child(9) {
             transform: rotate(288deg);
         }
+
         .light:nth-child(10) {
             transform: rotate(324deg);
         }
+
         .panel {
             position: relative;
             height: 200px;
@@ -75,6 +98,7 @@
             background-color: #b7b7b7;
             border-radius: 100px;
         }
+
         .sector {
             position: absolute;
             left: 100px;
@@ -86,42 +110,55 @@
             overflow: hidden;
             transform-origin: left center;
         }
+
         .sector:nth-child(1) {
             transform: rotate(-18deg);
         }
+
         .sector:nth-child(2) {
             transform: rotate(18deg);
         }
+
         .sector:nth-child(3) {
             transform: rotate(54deg);
         }
+
         .sector:nth-child(4) {
             transform: rotate(90deg);
         }
+
         .sector:nth-child(5) {
             transform: rotate(126deg);
         }
+
         .sector:nth-child(6) {
             transform: rotate(162deg);
         }
+
         .sector:nth-child(7) {
             transform: rotate(198deg);
         }
+
         .sector:nth-child(8) {
             transform: rotate(234deg);
         }
+
         .sector:nth-child(9) {
             transform: rotate(270deg);
         }
+
         .sector:nth-child(10) {
             transform: rotate(306deg);
         }
+
         .sector:nth-child(2n+1) .sector-inner {
             background: #fef6e0;
         }
+
         .sector:nth-child(2n) .sector-inner {
             background: #ffffff;
         }
+
         .sector-inner {
             text-align: center;
             display: block;
@@ -132,12 +169,18 @@
             transform-origin: right center;
             border-radius: 100px 0 0 100px;
         }
+
         .sector-inner span {
             display: block;
             transform-origin: center;
             transform: rotate(-19deg);
             color: #d46854;
         }
+
+        .pointer-trans {
+            transition: transform 3s cubic-bezier(.2, .93, .43, 1);
+        }
+
         .pointer {
             position: absolute;
             left: 79px;
@@ -153,8 +196,9 @@
             background-color: #ff5350;
             border-radius: 50%;
             border: 1px solid #ff5350;
-            transition: transform 3s cubic-bezier(.2,.93,.43,1);
+
         }
+
         .pointer::after {
             content: '';
             position: absolute;
@@ -166,128 +210,154 @@
             border-bottom-color: #ff5350;
             transform-origin: center;
         }
+
+        .button {
+            padding: 5px;
+            margin: 20px auto;
+            width: 100px;
+            background-color: #d46854;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+        }
+
         .result {
+            height: 50px;
+            line-height: 50px;
             text-align: center;
             /*margin: 20px 60px;*/
-            margin: 20px auto;
+            margin: 0 auto;
 
         }
 
         @keyframes twinkling {
-            50% { background: transparent; }
+            50% {
+                background: transparent;
+            }
         }
     </style>
 </head>
 <body>
-<div class="wrapper">
-    <div class="light"></div>
-    <div class="light"></div>
-    <div class="light"></div>
-    <div class="light"></div>
-    <div class="light"></div>
-    <div class="light"></div>
-    <div class="light"></div>
-    <div class="light"></div>
-    <div class="light"></div>
-    <div class="light"></div>
-    <div class="panel">
-        <div class="sector">
-            <div class="sector-inner">
-                <span>北京烤鸭</span>
+<div id="toEat">
+    <div class="wrapper">
+        <div :class=['light',onRotation?'light-twinkling':''] v-for="light in foodList"></div>
+        <div class="panel">
+            <div class="sector" v-for="food in foodList">
+                <div class="sector-inner">
+                    <span>{{ food }}</span>
+                </div>
+            </div>
+            <div :class=["pointer",onRotation?'pointer-trans':''] @transitionend="afterTransitionend"
+                 @click="handleClick">吃什么呢
             </div>
         </div>
-        <div class="sector">
-            <div class="sector-inner">
-                <span>烧鸡</span>
-            </div>
-        </div>
-        <div class="sector">
-            <div class="sector-inner">
-                <span>快餐</span>
-            </div>
-        </div>
-        <div class="sector">
-            <div class="sector-inner">
-                <span>麻辣烫</span>
-            </div>
-        </div>
-        <div class="sector">
-            <div class="sector-inner">
-                <span>饺子</span>
-            </div>
-        </div>
-        <div class="sector">
-            <div class="sector-inner">
-                <span>火锅</span>
-            </div>
-        </div>
-        <div class="sector">
-            <div class="sector-inner">
-                <span>烤肉</span>
-            </div>
-        </div>
-        <div class="sector">
-            <div class="sector-inner">
-                <span>寿司</span>
-            </div>
-        </div>
-        <div class="sector">
-            <div class="sector-inner">
-                <span>面</span>
-            </div>
-        </div>
-        <div class="sector">
-            <div class="sector-inner">
-                <span>炒饭</span>
-            </div>
-        </div>
-        <div class="pointer">吃什么呢</div>
     </div>
+    <div class="result">{{ result }}</div>
+    <div class="button">编辑配置</div>
 </div>
-<div class="result"></div>
-
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script>
-    let getEle = document.getElementsByClassName.bind(document);
-    let pointer = getEle('pointer')[0];
-    let result = getEle('result')[0];
-    let lights = Array.prototype.slice.call(getEle('light'));
+    const toEat = new Vue({
+        el: "#toEat",
+        data: {
+            foodList: ["北京烤鸭", "烧鸡", "快餐", "麻辣烫", "炒饭", "面", "寿司", "烤肉", "火锅", "饺子"],
+            onRotation: false, // 记录当前是否正在旋转，如果正在旋转，就不能继续点击了
+            result: '点击中间按钮看看今天吃啥',
+            nextStatus: {},
+        },
 
-    let onRotation = false; // 记录当前是否正在旋转，如果正在旋转，就不能继续点击了
-    let reward = ['北京烤鸭', '烧鸡', '快餐', '麻辣烫', '饺子',
-        '火锅', '烤肉', '寿司', '面', '炒饭'];
+        methods: {
+            afterTransitionend() {
+                const {nextStatus} = this;
+                setTimeout(() => { // 等闪烁三下结束
+                    this.onRotation = false;
+                    this.result = nextStatus.text;
+                }, 300);
+            },
+            //获得当前结果
+            getReward() {
+                let currentDeg = 0;
+                // 转三圈到四圈
+                let rotateDeg = Math.random() * 360 + 1080;
+                currentDeg += rotateDeg;
+                let rewardText = this.foodList[Math.floor((currentDeg + 18) % 360 / 36)]
+                this.nextStatus = {
+                    deg: currentDeg,
+                    text: `就决定是你了！${rewardText}`
+                }
+            },
+            //重置
+            reset() {
+                this.onRotation = false;
+                this.result = '   ';
+                this.nextStatus = {}
+            },
+            // 功能1:转动转盘
+            // 1.点击中间按钮转动转盘
+            // 2.获得结果并显示
+            // 3.制作灯闪效果
+            handleClick() {
 
-    // 根据随机角度获取奖励
-    let getReward = (function() {
-        currentDeg = 0;
-        return function() {
-            // 转三圈到四圈
-            let rotateDeg = Math.random() * 360 + 1080;
-            currentDeg += rotateDeg;
-            let rewardText = reward[Math.floor((currentDeg + 18) % 360 / 36)]
-            return {
-                deg: currentDeg,
-                text: `就决定是你了！${rewardText}`
+                if (this.onRotation) return;
+
+                this.reset();
+                let getEle = document.getElementsByClassName.bind(document);
+                let pointer = getEle('pointer')[0];
+                pointer.style.transform = 'rotateZ(0deg)';
+                this.onRotation = true;
+                this.result = ' ';
+                this.getReward();
+                pointer.style.transform = `rotateZ(${this.nextStatus.deg}deg)`;
             }
         }
-    })();
-
-    pointer.addEventListener('click', () => {
-        if (onRotation) return;
-        onRotation = true;
-        lights.forEach(light => { light.className += ' light-twinkling'; });
-        let nextStatus = getReward();
-        console.log(nextStatus)
-        result.innerText = nextStatus.text;
-        result.style.display = 'none';
-        pointer.style.transform = `rotateZ(${nextStatus.deg}deg)`;
-    })
-    pointer.addEventListener('transitionend', () => {
-        setTimeout(() => { // 等闪烁三下结束
-            onRotation = false;
-            lights.forEach(light => { light.className = 'light'; });
-            result.style.display = 'block';
-        }, 300);
-    })
+    });
 </script>
+<script>
+    // let getEle = document.getElementsByClassName.bind(document);
+    // let pointer = getEle('pointer')[0];
+    // let result = getEle('result')[0];
+    // let lights = Array.prototype.slice.call(getEle('light'));
+    //
+    // let onRotation = false; // 记录当前是否正在旋转，如果正在旋转，就不能继续点击了
+    // let reward = ['北京烤鸭', '烧鸡', '快餐', '麻辣烫', '饺子',
+    //     '火锅', '烤肉', '寿司', '面', '炒饭'];
+    //
+    // // 根据随机角度获取奖励
+    // let getReward = (function () {
+    //     currentDeg = 0;
+    //     return function () {
+    //         // 转三圈到四圈
+    //         let rotateDeg = Math.random() * 360 + 1080;
+    //         currentDeg += rotateDeg;
+    //         let rewardText = reward[Math.floor((currentDeg + 18) % 360 / 36)]
+    //         return {
+    //             deg: currentDeg,
+    //             text: `就决定是你了！${rewardText}`
+    //         }
+    //     }
+    // })();
+
+    // pointer.addEventListener('click', () => {
+    //     if (onRotation) return;
+    //     onRotation = true;
+    //     lights.forEach(light => {
+    //         light.className += ' light-twinkling';
+    //     });
+    //     let nextStatus = getReward();
+    //     result.innerText = nextStatus.text;
+    //     result.style.visibility = 'hidden';
+    //     pointer.style.transform = `rotateZ(${nextStatus.deg}deg)`;
+    // })
+    // pointer.addEventListener('transitionend', () => {
+    //     setTimeout(() => { // 等闪烁三下结束
+    //         onRotation = false;
+    //         lights.forEach(light => {
+    //             light.className = 'light';
+    //         });
+    //         result.style.visibility = 'visible';
+    //     }, 300);
+    // })
+</script>
+
 </body>
 </html>
