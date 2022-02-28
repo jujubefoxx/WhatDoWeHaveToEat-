@@ -298,7 +298,7 @@
     <div class="button" @click="showEdit=true">编辑配置</div>
     <div v-if="showEdit" id="popBox">
         <div class="close">
-            <a href="javascript:void(0)" onclick="showEdit=false">关闭</a>
+            <a href="javascript:void(0)" @click="showEdit=false">关闭</a>
         </div>
         <div class="content">
             <div class="content-title">
@@ -306,7 +306,10 @@
             </div>
             <div>
                 <ul>
-                    <li v-for="food in foodList">{{ food }}<a href="javascript:void(0)" onclick="showEdit=false">修改</a>
+                    <li v-for="(food,index) in foodList">
+                        <!--                        <input v-model="foodList[index]" placeholder="edit me">-->
+                        {{ food }}
+                        <a href="javascript:void(0)" @click="handleEdit(index)">修改</a>
                     </li>
                 </ul>
             </div>
@@ -367,8 +370,12 @@
                 this.getReward();
                 pointer.style.transform = `rotateZ(${this.nextStatus.deg}deg)`;
             },
-            handleEdit() {
-                console.log('当前配置')
+            handleEdit(index) {
+                console.log('当前配置', this.foodList[index])
+                const value = prompt(`请输入需要替换${this.foodList[index]}的事物`);
+                if (value) {
+                    Vue.set(this.foodList, index, value)
+                }
             }
         }
     });
