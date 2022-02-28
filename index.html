@@ -252,14 +252,18 @@
         }
 
         #popBox .content {
-            padding: 30px;
+            padding: 15px;
+            font-size: 14px;
+            text-align: left;
+            line-height: 25px;
         }
 
         #popBox .close {
             text-align: right;
             margin-right: 5px;
             font-size: 12px;
-            line-height: 20px;
+            height: 25px;
+            line-height: 25px;
             background-color: #F8F8F8;
         }
 
@@ -270,6 +274,37 @@
 
         a {
             text-decoration: none;
+        }
+
+        .content-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .popBox-list {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .edit-button {
+            height: 20px;
+            font-size: 12px;
+            line-height: 20px;
+            margin-left: 50px;
+            background: #d46854;
+            color: #f2f2f2;
+            padding: 3px;
+            font-family: 微软雅黑, 宋体, Arial, Helvetica, Verdana, sans-serif;
+            border-radius: 3px;
+            -webkit-transition: all linear 0.30s;
+            -moz-transition: all linear 0.30s;
+            transition: all linear 0.30s;
+        }
+
+        .edit-button:hover {
+            background: #385f9e;
         }
 
         @keyframes twinkling {
@@ -306,10 +341,10 @@
             </div>
             <div>
                 <ul>
-                    <li v-for="(food,index) in foodList">
+                    <li class="popBox-list" v-for="(food,index) in foodList">
                         <!--                        <input v-model="foodList[index]" placeholder="edit me">-->
                         {{ food }}
-                        <a href="javascript:void(0)" @click="handleEdit(index)">修改</a>
+                        <a class="edit-button" href="javascript:void(0)" @click="handleEdit(index)">修改</a>
                     </li>
                 </ul>
             </div>
