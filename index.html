@@ -14,7 +14,6 @@
             border: none;
             outline: none;
             user-select: none;
-            text-align: center;
         }
 
         .el-message-box {
@@ -23,6 +22,10 @@
 
         .el-dialog__body {
             padding: 20px;
+        }
+
+        #toEat {
+            text-align: center;
         }
 
         .wrapper {
@@ -301,28 +304,14 @@
 
         .popBox-list__text {
             text-align: left;
-            width: 210px;
+            width: 170px;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
         }
 
-        .edit-button {
-            height: 20px;
-            font-size: 12px;
-            line-height: 20px;
-            background: #d46854;
-            color: #fff;
-            padding: 3px;
-            font-family: 微软雅黑, 宋体, Arial, Helvetica, Verdana, sans-serif;
-            border-radius: 3px;
-            -webkit-transition: all linear 0.30s;
-            -moz-transition: all linear 0.30s;
-            transition: all linear 0.30s;
-        }
-
-        .edit-button:hover {
-            background: #385f9e;
+        .random-button {
+            margin-bottom: 10px;
         }
 
         @keyframes twinkling {
@@ -348,7 +337,10 @@
         </div>
     </div>
     <div class="result">{{ result }}</div>
-    <el-button @click="handleRandom">随机配置</el-button>
+    <div class="random-button">
+        <el-button @click="handleRandom">随机配置</el-button>
+        <el-button type="primary" plain @click="handleEditRandomList">编辑随机列表</el-button>
+    </div>
     <el-button type="danger" plain @click="showEdit=true">自主编辑当前配置</el-button>
     <el-dialog title="当前配置" :visible.sync="showEdit" width="336px">
         <div class="content">
@@ -356,11 +348,28 @@
                 <ul>
                     <li class="popBox-list" v-for="(food,index) in foodList">
                         <span class="popBox-list__text"> {{ food }}</span>
-                        <a class="edit-button" href="javascript:void(0)" @click="handleEdit(index)">修改</a>
+                        <el-button size="mini" @click="handleRandomOne(index)">随机</el-button>
+                        <el-button size="mini" type="primary" plain @click="handleEdit(index)">修改</el-button>
                     </li>
                 </ul>
             </div>
         </div>
+    </el-dialog>
+    <el-dialog
+            title="提示"
+            :visible.sync="dialogVisible"
+            width="336px">
+        <el-input
+                type="textarea"
+                :rows="10"
+                placeholder="请输入内容"
+                v-model="randomListText">
+        </el-input>
+        <span style="font-size: 12px;text-align: left">请使用空格对食物进行分隔，如：“牛肉 鸡排 汉堡”</span>
+        <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="saveRandomList">确 定</el-button>
+  </span>
     </el-dialog>
 </div>
 <!--引入cdn-->
@@ -374,25 +383,60 @@
         el: "#toEat",
         data() {
             return {
+                dialogVisible: false,
                 foodList: ["北京烤鸭", "烧鸡", "快餐", "麻辣烫", "炒饭", "面", "寿司", "烤肉", "火锅", "饺子"],//食物列表
                 onRotation: false, // 记录当前是否正在旋转，如果正在旋转，就不能继续点击了
                 result: '点击中间按钮看看今天吃啥',//结果文案
                 nextStatus: {},//转盘的下一个状态
                 showEdit: false, //是否处于编辑状态
+                randomListText: '',//randomList文本域内容
                 randomList: ['盖浇饭', '砂锅', '大排档', '米线', '满汉全席', '西餐', '麻辣烫', '自助餐', '炒面', '快餐', '水果', '西北风', '馄饨', '火锅', '烧烤', '泡面', '速冻水饺', '日本料理', '涮羊肉', '味千拉面', '肯德基', '面包', '扬州炒饭', '自助餐', '茶餐厅', '海底捞', '咖啡', '比萨', '麦当劳', '兰州拉面', '沙县小吃', '烤鱼', '海鲜', '铁板烧', '韩国料理', '粥', '快餐', '东南亚菜', '甜点', '农家菜', '川菜', '粤菜', '湘菜', '本帮菜', '竹笋烤肉']
             }
         },
+        created() {
+            this.handleRandom();
+        },
         methods: {
+            //编辑随机食物列表
+            handleEditRandomList() {
+                this.dialogVisible = true;
+                this.randomListText = this.randomList.join(' ');
+            },
+            //保存随机食物列表
+            saveRandomList() {
+                this.dialogVisible = false;
+                this.randomList = this.randomListText.split(' ')
+            },
             //手动随机食物配置
             handleRandom() {
                 const {randomList, foodList} = this;
-                const newArr = JSON.parse(JSON.stringify(randomList)) //深拷贝
-                const newList = foodList.map((item) => {
+                let newArr = JSON.parse(JSON.stringify(randomList)) //深拷贝
+                this.foodList = foodList.map((item) => {
                     const index = this.randomNumBoth(0, newArr.length)
-                    return newArr[index]
-                })
-                console.log(newList)
-                this.foodList = newList
+                    const result = newArr[index];
+                    newArr.splice(index, 1) //去重
+                    return result
+                });//修改为新的随机列表
+                if (!this.nextStatus.deg) return;//修改结果中的食物
+                let currentDeg = this.nextStatus.deg; //如果当前已有角度则获取角度 无则为0
+                //获取结果位置的食物
+                this.nextStatus.food = this.foodList[Math.floor((currentDeg + 18) % 360 / 36)];
+                this.result = `就决定是你了！${this.nextStatus.food}`;
+            },
+            //手动随机单个食物配置
+            handleRandomOne(index) {
+                const {randomList, foodList} = this;
+                const number = this.randomNumBoth(0, randomList.length);
+                const isResult = this.foodList[index] === this.nextStatus.food;//修改的食物是否为当前结果的食物
+                Vue.set(this.foodList, index, randomList[number]) //更新新的值
+                this.$message({
+                    type: 'success',
+                    message: '已随机为: ' + randomList[number]
+                });
+                if (!this.nextStatus.deg || !isResult) return;//修改结果中的食物
+                //获取结果位置的食物
+                this.nextStatus.food = randomList[number];
+                this.result = `就决定是你了！${this.nextStatus.food}`;
             },
             //获取一个随机数
             randomNumBoth(Min, Max) {
@@ -408,7 +452,7 @@
                 const {nextStatus} = this;
                 setTimeout(() => { // 等闪烁三下结束
                     this.onRotation = false; //结束旋转状态
-                    this.result = nextStatus.text; //更新结果文案为下一步状态的文案
+                    this.result = `就决定是你了！${nextStatus.food}`; //更新结果文案为下一步状态的文案
                 }, 300);
             },
             //获得当前结果
@@ -422,7 +466,7 @@
                 let rewardText = this.foodList[Math.floor((currentDeg + 18) % 360 / 36)] //获取结果位置的食物
                 this.nextStatus = {
                     deg: currentDeg,
-                    text: `就决定是你了！${rewardText}`
+                    food: rewardText
                 } //更新下一步状态
                 pointer.style.transform = `rotateZ(${this.nextStatus.deg}deg)`; //旋转+动画
             },
@@ -443,7 +487,7 @@
                 this.getReward();//获取结果
             },
             handleEdit(index) {
-                this.$prompt(`请输入需要替换${this.foodList[index]}的事物`, '提示', {
+                this.$prompt(`请输入需要替换${this.foodList[index]}的食物`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                 }).then(({value}) => {
@@ -451,7 +495,12 @@
                         type: 'success',
                         message: '已修改为: ' + value
                     });
+                    const isResult = this.foodList[index] === this.nextStatus.food;//修改的食物是否为当前结果的食物
                     Vue.set(this.foodList, index, value) //更新新的值
+                    if (!this.nextStatus.deg || !isResult) return;//修改结果中的食物
+                    //获取结果位置的食物
+                    this.nextStatus.food = value;
+                    this.result = `就决定是你了！${this.nextStatus.food}`;
                 }).catch(() => {
                     this.$message({
                         type: 'info',
