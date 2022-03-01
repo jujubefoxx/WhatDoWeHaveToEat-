@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>今天吃什么</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <style>
         /* 样式参考自https://www.cnblogs.com/wenruo/p/9732704.html*/
         * { /* 重置默认样式 */
@@ -12,6 +14,14 @@
             border: none;
             outline: none;
             user-select: none;
+        }
+
+        .el-message-box {
+            width: auto;
+        }
+
+        .el-dialog__body {
+            padding: 20px;
         }
 
         .wrapper {
@@ -288,13 +298,19 @@
             margin: 10px 0;
         }
 
+        .popBox-list__text {
+            width: 210px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
         .edit-button {
             height: 20px;
             font-size: 12px;
             line-height: 20px;
-            margin-left: 50px;
             background: #d46854;
-            color: #f2f2f2;
+            color: #fff;
             padding: 3px;
             font-family: 微软雅黑, 宋体, Arial, Helvetica, Verdana, sans-serif;
             border-radius: 3px;
@@ -331,28 +347,44 @@
     </div>
     <div class="result">{{ result }}</div>
     <div class="button" @click="showEdit=true">编辑配置</div>
-    <div v-if="showEdit" id="popBox">
-        <div class="close">
-            <a href="javascript:void(0)" @click="showEdit=false">关闭</a>
-        </div>
+    <!--    <div v-if="showEdit" id="popBox">-->
+    <!--        <div class="close">-->
+    <!--            <a href="javascript:void(0)" @click="showEdit=false">关闭</a>-->
+    <!--        </div>-->
+    <!--        <div class="content">-->
+    <!--            <div class="content-title">-->
+    <!--                当前配置-->
+    <!--            </div>-->
+    <!--            <div>-->
+    <!--                <ul>-->
+    <!--                    <li class="popBox-list" v-for="(food,index) in foodList">-->
+    <!--                        &lt;!&ndash;                        <input v-model="foodList[index]" placeholder="edit me">&ndash;&gt;-->
+    <!--                        {{ food }}-->
+    <!--                        <a class="edit-button" href="javascript:void(0)" @click="handleEdit(index)">修改</a>-->
+    <!--                    </li>-->
+    <!--                </ul>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
+    <el-dialog title="当前配置" :visible.sync="showEdit" width="336px">
         <div class="content">
-            <div class="content-title">
-                当前配置
-            </div>
             <div>
                 <ul>
                     <li class="popBox-list" v-for="(food,index) in foodList">
                         <!--                        <input v-model="foodList[index]" placeholder="edit me">-->
-                        {{ food }}
+                        <span class="popBox-list__text"> {{ food }}</span>
                         <a class="edit-button" href="javascript:void(0)" @click="handleEdit(index)">修改</a>
                     </li>
                 </ul>
             </div>
         </div>
-    </div>
+    </el-dialog>
 </div>
 <!--引入cdn-->
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script>
     const toEat = new Vue({
         //挂载
@@ -406,10 +438,24 @@
                 this.getReward();//获取结果
             },
             handleEdit(index) {
-                const value = prompt(`请输入需要替换${this.foodList[index]}的事物`);  //弹出输入框
-                if (value) {
+                this.$prompt(`请输入需要替换${this.foodList[index]}的事物`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                }).then(({value}) => {
+                    this.$message({
+                        type: 'success',
+                        message: '已修改为: ' + value
+                    });
                     Vue.set(this.foodList, index, value) //更新新的值
-                }
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '取消修改'
+                    });
+                });
+                // if (value) {
+                //     Vue.set(this.foodList, index, value) //更新新的值
+                // }
             }
         }
     });
