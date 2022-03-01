@@ -14,6 +14,7 @@
             border: none;
             outline: none;
             user-select: none;
+            text-align: center;
         }
 
         .el-message-box {
@@ -218,7 +219,7 @@
             cursor: pointer;
             padding: 5px;
             margin: 20px auto;
-            width: 100px;
+            max-width: 100px;
             background-color: #d46854;
             color: #fff;
             text-align: center;
@@ -299,6 +300,7 @@
         }
 
         .popBox-list__text {
+            text-align: left;
             width: 210px;
             overflow: hidden;
             white-space: nowrap;
@@ -346,32 +348,13 @@
         </div>
     </div>
     <div class="result">{{ result }}</div>
-    <div class="button" @click="showEdit=true">编辑配置</div>
-    <!--    <div v-if="showEdit" id="popBox">-->
-    <!--        <div class="close">-->
-    <!--            <a href="javascript:void(0)" @click="showEdit=false">关闭</a>-->
-    <!--        </div>-->
-    <!--        <div class="content">-->
-    <!--            <div class="content-title">-->
-    <!--                当前配置-->
-    <!--            </div>-->
-    <!--            <div>-->
-    <!--                <ul>-->
-    <!--                    <li class="popBox-list" v-for="(food,index) in foodList">-->
-    <!--                        &lt;!&ndash;                        <input v-model="foodList[index]" placeholder="edit me">&ndash;&gt;-->
-    <!--                        {{ food }}-->
-    <!--                        <a class="edit-button" href="javascript:void(0)" @click="handleEdit(index)">修改</a>-->
-    <!--                    </li>-->
-    <!--                </ul>-->
-    <!--            </div>-->
-    <!--        </div>-->
-    <!--    </div>-->
+    <el-button @click="handleRandom">随机配置</el-button>
+    <el-button type="danger" plain @click="showEdit=true">自主编辑当前配置</el-button>
     <el-dialog title="当前配置" :visible.sync="showEdit" width="336px">
         <div class="content">
             <div>
                 <ul>
                     <li class="popBox-list" v-for="(food,index) in foodList">
-                        <!--                        <input v-model="foodList[index]" placeholder="edit me">-->
                         <span class="popBox-list__text"> {{ food }}</span>
                         <a class="edit-button" href="javascript:void(0)" @click="handleEdit(index)">修改</a>
                     </li>
@@ -395,10 +378,32 @@
                 onRotation: false, // 记录当前是否正在旋转，如果正在旋转，就不能继续点击了
                 result: '点击中间按钮看看今天吃啥',//结果文案
                 nextStatus: {},//转盘的下一个状态
-                showEdit: false //是否处于编辑状态
+                showEdit: false, //是否处于编辑状态
+                randomList: ['盖浇饭', '砂锅', '大排档', '米线', '满汉全席', '西餐', '麻辣烫', '自助餐', '炒面', '快餐', '水果', '西北风', '馄饨', '火锅', '烧烤', '泡面', '速冻水饺', '日本料理', '涮羊肉', '味千拉面', '肯德基', '面包', '扬州炒饭', '自助餐', '茶餐厅', '海底捞', '咖啡', '比萨', '麦当劳', '兰州拉面', '沙县小吃', '烤鱼', '海鲜', '铁板烧', '韩国料理', '粥', '快餐', '东南亚菜', '甜点', '农家菜', '川菜', '粤菜', '湘菜', '本帮菜', '竹笋烤肉']
             }
         },
         methods: {
+            //手动随机食物配置
+            handleRandom() {
+                const {randomList, foodList} = this;
+                const newArr = JSON.parse(JSON.stringify(randomList)) //深拷贝
+                const newList = foodList.map((item) => {
+                    const index = this.randomNumBoth(0, newArr.length)
+                    return newArr[index]
+                })
+                console.log(newList)
+                this.foodList = newList
+            },
+            //获取一个随机数
+            randomNumBoth(Min, Max) {
+                const Range = Max - Min;
+
+                const Rand = Math.random();
+
+                const num = Min + Math.floor(Rand * Range); //舍去
+
+                return num;
+            },
             afterTransitionend() {
                 const {nextStatus} = this;
                 setTimeout(() => { // 等闪烁三下结束
