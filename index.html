@@ -339,9 +339,9 @@
     <div class="result">{{ result }}</div>
     <div class="random-button">
         <el-button @click="handleRandom">随机配置</el-button>
-        <el-button type="primary" plain @click="handleEditRandomList">编辑随机列表</el-button>
+        <el-button type="primary" plain @click="handleEditRandomList">自定义随机列表</el-button>
     </div>
-    <el-button type="danger" plain @click="showEdit=true">自主编辑当前配置</el-button>
+    <el-button type="danger" plain @click="showEdit=true">自定义当前配置</el-button>
     <el-dialog title="当前配置" :visible.sync="showEdit" width="336px">
         <div class="content">
             <div>
