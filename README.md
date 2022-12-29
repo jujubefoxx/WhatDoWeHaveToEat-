@@ -4,8 +4,8 @@
 
 线上预览地址:https://jujubefoxx.github.io/WhatDoWeHaveToEat-/
 
-## 暂停更新
+main分支为Vue2版本，Vue3版本需要切换到Vue3分支
 
-h5不更了 新功能和优化都放在
-https://github.com/jujubefoxx/Taro_HungryTurntable
-里进行更新
+## 新功能和优化都放在小程序版本
+小程序版本:https://github.com/jujubefoxx/Taro_HungryTurntable
+
