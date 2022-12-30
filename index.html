@@ -380,10 +380,6 @@
       </span>
     </el-dialog>
 </div>
-<!--引入cdn-->
-<!--<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>-->
-<!-- 引入组件库 -->
-<!--<script src="https://unpkg.com/element-ui/lib/index.js"></script>-->
 <script type="module">
     const {createApp, reactive, ref} = Vue;
     // 手动引入
@@ -553,48 +549,5 @@
     toEat.use(ElementPlus)
     toEat.mount('#toEat')
 </script>
-<!--<script>-->
-<!--    const toEat = new Vue({-->
-<!--        //挂载-->
-<!--        el: "#toEat",-->
-<!--        data() {-->
-<!--            return {-->
-<!--                dialogVisible: false,-->
-<!--                foodList: ["北京烤鸭", "烧鸡", "快餐", "麻辣烫", "炒饭", "面", "寿司", "烤肉", "火锅", "饺子"],//食物列表-->
-<!--                onRotation: false, // 记录当前是否正在旋转，如果正在旋转，就不能继续点击了-->
-<!--                result: '点击中间按钮看看今天吃啥',//结果文案-->
-<!--                nextStatus: {},//转盘的下一个状态-->
-<!--                showEdit: false, //是否处于编辑状态-->
-<!--            }-->
-<!--        },-->
-<!--        created() {-->
-<!--            this.handleRandom();-->
-<!--        },-->
-<!--        methods: {-->
-<!--            //编辑随机食物列表-->
-
-
-<!--            //重置-->
-<!--            reset() {-->
-<!--                this.onRotation = false; //关闭旋转状态-->
-<!--                this.result = '   '; //结果清空-->
-<!--            },-->
-<!--            // 功能1:转动转盘-->
-<!--            // 1.点击中间按钮转动转盘-->
-<!--            // 2.获得结果并显示-->
-<!--            // 3.制作灯闪效果-->
-<!--            handleClick() {-->
-<!--                if (this.onRotation) return; //如果在旋转 不执行-->
-
-<!--                this.reset(); //重置-->
-<!--                this.onRotation = true; //开启旋转状态 禁止点击事件-->
-<!--                this.getReward();//获取结果-->
-<!--            },-->
-
-<!--        }-->
-<!--    });-->
-<!--</script>-->
-
-
 </body>
 </html>
